@@ -1,0 +1,19 @@
+{
+  "name": "GazeGen",
+  "architecture": "task-conditioned autoregressive fixation generator",
+  "checkpoint": "gazegen.pt",
+  "sha256": "69b8df45be83044390e7abd7a942b1b56598d4cc0e56c9bef2e1af4bd0821cd6",
+  "parameters": 1004107,
+  "corpus": "OneStop first readings only; original checkpoint without later trajectory-tail exclusions",
+  "tasks": [
+    "NR",
+    "IS"
+  ],
+  "output": [
+    "zero-based word indices",
+    "durations in milliseconds",
+    "completion and validity flags"
+  ],
+  "encoder": "encoder.json",
+  "training_and_downstream_code_included": false
+}

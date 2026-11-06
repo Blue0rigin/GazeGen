@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GazeGen · Task-conditioned gaze generation</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">RESEARCH PROTOTYPE · ONESTOP</div>
+      <h1>GazeGen</h1>
+      <p><a href="https://github.com/Blue0rigin/GazeGen" target="_blank" rel="noopener">Model weights, inference code, and instructions on GitHub</a></p>
+      <p class="lede">
+        See how a text might be inspected when reading to understand—or searching for an
+        answer.
+      </p>
+      <p>
+        GazeGen generates a sequence of fixated words and the time spent on each.
+        Explore its predictions beside recorded human eye movements.
+      </p>
+    </header>
+    <main>
+      <section class="guide">
+        <h2>Start with a comparison</h2>
+        <p>
+          <strong>1.</strong> Choose a passage and reading purpose.
+          <strong>2.</strong> Pick a comparison. <strong>3.</strong> Press Play, or move
+          through the path one fixation at a time.
+        </p>
+        <div class="controls">
+          <label
+            >Passage<select id="passage"></select
+            ><small
+              >12 paired passages from 6 articles excluded from training; curated model
+              examples.</small
+            ></label
+          >
+          <label
+            >Reading purpose<select id="task">
+              <option value="IS">Information seeking</option>
+              <option value="NR">Natural reading</option></select
+            ><small id="task-help"></small
+          ></label>
+          <label
+            >Compare<select id="comparison">
+              <option value="human">Generated vs. human</option>
+              <option value="versions">Advanced vs. Elementary</option>
+              <option value="tasks">Natural vs. information seeking</option></select
+            ><small id="comparison-help"></small
+          ></label>
+          <label id="version-label"
+            >Text version<select id="version">
+              <option value="Advanced">Advanced</option>
+              <option value="Elementary">Elementary</option></select
+            ><small
+              >Dataset editorial categories, not a reader's workload rating.</small
+            ></label
+          >
+        </div>
+        <div id="question-area">
+          <h3>The question shown before reading</h3>
+          <div id="questions" role="group" aria-label="Choose a question"></div>
+          <p class="hint">
+            Choose a different question to inspect its saved generated paths. Different
+            outputs alone do not show that the model reproduces human responses to
+            tasks.
+          </p>
+          <details id="custom">
+            <summary>Try your own question with the local model</summary>
+            <p id="server-status">
+              Saved examples work offline. New questions require the included local
+              inference server; the README gives the start command.
+            </p>
+            <label
+              >Question<input
+                id="custom-question"
+                placeholder="What would you like to find in this passage?"
+                maxlength="500" /></label
+            ><button id="generate">Generate a new path</button>
+            <p id="generation-status" role="status"></p>
+          </details>
+        </div>
+      </section>
+      <section class="workspace">
+        <div class="toolbar">
+          <button id="play" class="primary">▶ Play</button
+          ><button id="step">Next fixation</button><button id="reset">Reset</button
+          ><label
+            >Playback speed<select id="speed">
+              <option value="1">1× actual duration</option>
+              <option value="4" selected>4× faster</option>
+              <option value="8">8× faster</option>
+            </select></label
+          ><button id="another">Next saved trajectory</button
+          ><label class="check"
+            ><input type="checkbox" id="heat" /> Show full-path dwell time</label
+          >
+        </div>
+        <div class="scrubber">
+          <input
+            id="time"
+            type="range"
+            min="0"
+            max="1000"
+            value="0"
+            aria-label="Playback position"
+          /><output id="clock">0.0 s</output>
+        </div>
+        <div class="legend">
+          <span class="dot gen"></span> Generated prediction
+          <span class="dot human"></span> Recorded human
+          <span
+            >Circles = fixations; lines = reading order; longer durations = larger
+            circles.</span
+          >
+        </div>
+        <p class="hint" id="curation-note">
+          Curated examples: saved model paths were selected for closer agreement with
+          human records. Use “Next saved trajectory” to inspect five selected draws and
+          all recorded readers.
+        </p>
+        <div id="context" class="context"></div>
+        <div id="panels" class="panels"></div>
+      </section>
+      <section class="notes">
+        <h2>How to read this demonstration</h2>
+        <div class="note-grid">
+          <div>
+            <h3>Two reading purposes</h3>
+            <p>
+              Natural reading has no question available before reading. Information
+              seeking gives the model the actual question as well as the text. For saved
+              examples, the recorded readers had the corresponding experimental
+              instruction.
+            </p>
+          </div>
+          <div>
+            <h3>Two kinds of trajectories</h3>
+            <p>
+              Generated paths are sampled predictions from one fixed GazeGen model.
+              Human paths are individual observed records; a generated sample is not
+              paired with a particular person's identity. Use “Next saved trajectory” to
+              inspect variation.
+            </p>
+          </div>
+          <div>
+            <h3>Two versions of a passage</h3>
+            <p>
+              Advanced and Elementary express related content with different wording.
+              Compare their coverage, revisits, and timing without assuming a simpler
+              version always produces a shorter path. These examples do not measure
+              subjective difficulty.
+            </p>
+          </div>
+        </div>
+        <details>
+          <summary>Data, display conventions, and limits</summary>
+          <p>
+            The model was trained only on OneStop first readings, with held-out readers
+            and article families. The gallery retains the original three passages and
+            adds nine pairs selected for closer generated–human agreement across both
+            tasks and text versions. Each condition shows five of the 50 archived draws
+            selected by mean normalized edit distance and duration-normalized ScaSim
+            against all matched human readers. Every matching human record is retained.
+            These curated examples illustrate successful predictions; they do not
+            represent average performance or replace the full-test evaluation. The exact
+            choices are recorded in
+            <a href="selection_manifest.json">the selection manifest</a>. Events below
+            50 ms are omitted under the same display convention used for evaluation.
+            Word positions are reflowed in this browser; lines do not reconstruct the
+            original screen coordinates. Workload, comprehension, individual attention,
+            and causal task effects cannot be inferred from an animation.
+          </p>
+          <p>
+            Source:
+            <a
+              href="https://lacclab.github.io/OneStop-Eye-Movements/"
+              target="_blank"
+              rel="noopener"
+              >OneStop · Berzak et al. (2025)</a
+            >. This review package contains the model weights, inference code, and
+            interactive prototype. Evaluation methods and results are described in
+            the accompanying proposal and technical supplement; training and downstream
+            experiment code are not included in this release.
+          </p>
+          <p id="provenance"></p>
+        </details>
+      </section>
+    </main>
+    <footer>
+      GazeGen · Task-conditioned gaze generation for studying text-based knowledge work
+      · Stage 1 prototype
+    </footer>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
