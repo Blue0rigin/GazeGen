@@ -11,7 +11,7 @@ This Stage 1 review artifact accompanies **Gaze Generation for Studying Text-Bas
 
 The package contains the **trained GazeGen weights, the code needed for inference, and an interactive demo**, with the small set of saved examples and encoder features needed to use them. It uses the original OneStop-only checkpoint described in the proposal. The weights and generation algorithm are unchanged.
 
-The full training pipeline, training/validation datasets, sampling schedules, downstream prediction models, evaluation scripts, and experimental result archives are **not included**. The accompanying proposal reports the preliminary findings; the technical supplement explains the model and evaluation methods. We plan to further develop and document the training pipeline and release the full codebase publicly upon publication. This release supports inspecting the prototype and running inference, rather than reproducing the complete training and evaluation pipeline.
+The full training pipeline, training/validation datasets, sampling schedules, downstream prediction models, evaluation scripts, and experimental result archives are **not included**. The accompanying proposal reports the preliminary findings; the technical supplement explains the model architecture and training objective. We plan to further develop and document the training pipeline and release the full codebase publicly upon publication. This release supports inspecting the prototype and running inference, rather than reproducing the complete training and evaluation pipeline.
 
 ## 1. Explore the demo without installation
 
